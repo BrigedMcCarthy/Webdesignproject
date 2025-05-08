@@ -1,0 +1,24 @@
+<html>
+<head>
+<style type='text/css'>
+    div {
+        border: 1px solid #000000;
+    } 
+</style>
+<script type='text/javascript'>
+
+    function expandToWindow(element) {
+         var margin = 10; 
+
+         if (element.style.height < window.innerHeight) { 
+            element.style.height = window.innerHeight - (2 * margin) 
+         }
+    }
+
+
+</script>
+</head>
+<body onload='expandToWindow(document.getElementById("content"));'>
+<div id='content'>Hello World</div>
+</body>
+</html>
