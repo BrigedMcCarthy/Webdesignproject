@@ -10,6 +10,35 @@
 	border-radius: 10px;
   }
 
+
+
+.profile {
+	height: 2in;
+	width: 2in;
+	-webkit-user-drag: none;
+	-khtml-user-drag: none;
+	-moz-user-drag: none;
+	-o-user-drag: none;
+	user-drag: none;
+	pointer-events: none;
+
+}
+
+/*.profile_right {
+	height: 2in;
+	width: 2in;
+}
+*/
+
+.vl {
+	border-left: 6px solid green;
+	height: 500px;
+	position: absolute;
+	left: 50%;
+	margin-left: -3px;
+	top: 0;
+  }
+
   * { padding: 0; margin: 0; }
 
   html, body {
