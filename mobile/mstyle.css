@@ -109,10 +109,9 @@ a:active {
 	text-decoration: none;
 }
 a {
-	font-size: medium;
+	font-size: 2vmax;
 	background-image: url(images/button_noselect.svg);
 	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-	font-size: 2vw;
 }
 
 quote {
