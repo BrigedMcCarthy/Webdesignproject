@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Charms bar</title>
+    <link rel="stylesheet" href="metro_style.css">
+</head>
+
+<script>
+/* Set the width of the sidebar to 250px (show it) */
+    function openNav() {
+      document.getElementById("mySidepanel").style.width = "250px";
+    }
+    
+    /* Set the width of the sidebar to 0 (hide it) */
+    function closeNav() {
+      document.getElementById("mySidepanel").style.width = "0";
+    }
+</script>
+
+<div id="mySidepanel" class="sidepanel">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Clients</a>
+    <a href="#">Contact</a>
+  </div>
+  
+  <button class="openbtn" onclick="openNav()">&#9776; Toggle Sidepanel</button>
+  <h2>Collapsed Sidepanel</h2>
+  <p>Content...</p>
+
+
+
+
+
+
+
+</html>

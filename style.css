@@ -118,6 +118,8 @@ a {
 quote {
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	font-size: 11pt;
+	color:#0038A6;
+	font-weight: bold;
 }
 
 h1, h2, h3 {
