@@ -5,7 +5,8 @@
     position: fixed; /* Stay in place */
     z-index: 1; /* Stay on top */
     top: 0;
-    left: 100;
+    left: 0;
+    float:right;
     background-image: url("cbar.png");
     background-size: 100% 100%;
     overflow-x: hidden; /* Disable horizontal scroll */
