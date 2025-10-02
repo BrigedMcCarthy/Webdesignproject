@@ -5,8 +5,9 @@
     position: fixed; /* Stay in place */
     z-index: 1; /* Stay on top */
     top: 0;
-    left: 0;
+    left: 100;
     background-image: url("cbar.png");
+    background-size: 100% 100%;
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 60px; /* Place content 60px from the top */
     opacity: 1;
