@@ -6,7 +6,6 @@
     position: fixed; /* Stay in place */
     z-index: 1; /* Stay on top */
     top: 0;
-    left: 100%;
     float:right;
     background-image: url("cbar.png");
     background-size: 100% 100%;
