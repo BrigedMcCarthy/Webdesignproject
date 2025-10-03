@@ -30,15 +30,21 @@
 
   
   <button class="openbtn" onmouseover="openNav()">&#9776; Toggle Sidepanel</button>
-  <input onmousemove="this.value=event.clientX+':'+event.clientY" value="Mouse over me">
+  <input id="detector" onmousemove="this.value=event.clientX+':'+event.clientY" value="Mouse over me">
 
   <h2>Collapsed Sidepanel</h2>
   <p>Content...</p>
+    <script>
+        function getText() {
+            const myInput = document.getElementById('detector');
+            const inputValue = myInput.value;
+            document.getElementById('output').textContent = "You entered: " + inputValue;
+        }
+    </script>
 
 
 
 
 
-
-<small>103.1 alt 4</small>
+<small>103.1 alt 5</small>
 </html>
