@@ -56,4 +56,10 @@
   .openbtn:hover {
     opacity: 1;
     background-color: #444;
-  }
+  
+
+
+    /*detection box*/
+input {
+  width: 100px;
+}
