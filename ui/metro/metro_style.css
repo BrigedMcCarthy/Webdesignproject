@@ -58,7 +58,7 @@
   }
   
 .top-banner {
-  background-color: #333; /* Dark background color */
+  background-color: rgb(105, 105, 105); /* Dark background color */
   color: white; /* White text color */
   text-align: left; /* Center align text */
   width: 100%; /* Full width */
@@ -76,4 +76,8 @@
   margin-bottom: 15px;
 }
 
-
+body {
+  background-color: #1a5fb4;
+  margin: 0;
+  position: static;
+}
