@@ -1,18 +1,17 @@
 /* The sidepanel menu */
 /* PLEASE FIX ME */
 .sidepanel {
-    height: 500px; /* Specify a height */
+    position: absolute;
+    right: 0; /* Positions the sidebar to the right edge */
+    height: 100%; /* Specify a height */
     width: 0; /* 0 width - change this with JavaScript */
-    position: fixed; /* Stay in place */
     z-index: 1; /* Stay on top */
-    top: 0;
-    float:right;
     background-image: url("cbar.png");
     background-size: 100% 100%;
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
     opacity: 1;
     transition: ease-in 0.1s;
+    z-index: 10;
   }
   
   /* The sidepanel links */
@@ -56,10 +55,25 @@
   .openbtn:hover {
     opacity: 1;
     background-color: #444;
+  }
   
-
-
-    /*detection box*/
-input {
-  width: 30%;
+.top-banner {
+  background-color: #333; /* Dark background color */
+  color: white; /* White text color */
+  text-align: left; /* Center align text */
+  width: 100%; /* Full width */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+
+
+.top-banner h1 {
+  margin-bottom: 10px;
+  padding: 1%;
+}
+
+.top-banner p {
+  margin-bottom: 15px;
+}
+
+
