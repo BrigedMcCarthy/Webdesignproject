@@ -3,7 +3,6 @@
 .sidepanel {
     top: 50%;
     bottom: 50%;
-    position: absolute;
     right: 0; /* Positions the sidebar to the right edge */
     height: 100%; /* Specify a height */
     width: 0; /* 0 width - change this with JavaScript */
@@ -14,6 +13,13 @@
     opacity: 1;
     transition: ease-in 0.1s;
     z-index: 10;
+  }
+
+  /* Horrible hack for the sidebar links to be centered
+  but it should do it anyway */
+  .hackyhack {
+    top: 50%;
+    bottom: 50%;
   }
   
   /* The sidepanel links */
