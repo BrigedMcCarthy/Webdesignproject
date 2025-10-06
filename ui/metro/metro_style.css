@@ -1,6 +1,8 @@
 /* The sidepanel menu */
 /* PLEASE FIX ME */
 .sidepanel {
+    top: 50%;
+    bottom: 50%;
     position: absolute;
     right: 0; /* Positions the sidebar to the right edge */
     height: 100%; /* Specify a height */
