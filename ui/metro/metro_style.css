@@ -1,8 +1,6 @@
 /* The sidepanel menu */
 /* PLEASE FIX ME */
 .sidepanel {
-    top: 50%;
-    bottom: 50%;
     right: 0; /* Positions the sidebar to the right edge */
     height: 100%; /* Specify a height */
     width: 0; /* 0 width - change this with JavaScript */
@@ -20,6 +18,8 @@
   .hackyhack {
     top: 50%;
     bottom: 50%;
+    float:right;
+    padding-left: 100%;
   }
   
   /* The sidepanel links */
