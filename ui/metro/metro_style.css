@@ -1,5 +1,10 @@
 /* The sidepanel menu */
-/* PLEASE FIX ME */
+/*
+(to the tune of jingle bells)
+WHY THE FUCK WONT THIS WORK EVER 
+BURN BURN BURN BURN BURN BURN 
+*/
+
 .sidepanel {
     padding-top: 15%;
     padding-bottom: 15%;
@@ -17,8 +22,28 @@
 
   /* Horrible hack for the sidebar links to be centered
   but it should do it anyway */
-  .hackyhack {
+  /*Note it didnt do anything but im to scared to remove it incase the compiler
+  decides to fuck with me */
+  .hackyhack1 {
+    position: relative;
     float:right;
+    z-index: 0;
+  }
+    .hackyhack2 {
+    float:right;
+    z-index: 1;
+  }
+    .hackyhack3 {
+    float:right;
+    z-index: 2;
+  }
+    .hackyhack4 {
+    float:right;
+    z-index: 3;
+  }
+    .hackyhack5 {
+    float:right;
+    z-index: 4;
   }
   
   /* The sidepanel links */
