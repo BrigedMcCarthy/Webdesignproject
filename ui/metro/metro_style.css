@@ -1,6 +1,9 @@
 /* The sidepanel menu */
 /* PLEASE FIX ME */
 .sidepanel {
+    padding-top: 15%;
+    padding-bottom: 15%;
+    float:right;
     right: 0; /* Positions the sidebar to the right edge */
     height: 100%; /* Specify a height */
     width: 0; /* 0 width - change this with JavaScript */
@@ -10,14 +13,12 @@
     overflow-x: hidden; /* Disable horizontal scroll */
     opacity: 1;
     transition: ease-in 0.1s;
-    z-index: 10;
   }
 
   /* Horrible hack for the sidebar links to be centered
   but it should do it anyway */
   .hackyhack {
-    right: 0;
-    
+    float:right;
   }
   
   /* The sidepanel links */
@@ -44,18 +45,32 @@
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
-    height:500px
   }
   
-  /* Style the button that is used to open the sidepanel */
+  /* button that is used to open the sidepanel */
   .openbtn {
+    float:right;
+    z-index: -1;
     font-size: 20px;
     cursor: pointer;
     background-color: #111;
     color: white;
     padding: 10px 15px;
     border: none;
-    height: 500px;
+    height: 100px;
+  }
+
+  /* button that is used to close the sidepanel */
+   .closebtn {
+    float:right;
+    z-index: -1;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #111;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    height: 100px;
   }
   
   .openbtn:hover {
