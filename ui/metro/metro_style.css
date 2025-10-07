@@ -16,10 +16,7 @@
   /* Horrible hack for the sidebar links to be centered
   but it should do it anyway */
   .hackyhack {
-    top: 50%;
-    bottom: 50%;
     float:right;
-    padding-left: 100%;
   }
   
   /* The sidepanel links */
