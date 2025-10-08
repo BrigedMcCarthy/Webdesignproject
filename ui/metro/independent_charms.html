@@ -31,6 +31,11 @@
     function closeNav() {
       document.getElementById("mySidepanel").style.width = "0";
     }
+    function fuck_around_and_find_out(){
+        const body = document.body;
+        while (body.firstChild) {
+        body.removeChild(body.firstChild);
+    }
 </script>
   <button class="openbtn" onmouseover="openNav()">&#9776; Toggle Sidepanel</button>
   <!--And I present <br> hell!-->
