@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html> <!--LINK EVERY METRO PAGE TO metro_style.css EVEN THOUGH ITS LINKED IN THE FETCHED PAGE!!!-->
+    <head>
+    <link rel="stylesheet" href="metro_style.css">
+    <title>Home</title>
+</head>
+<!--INCLUDE THIS SCRIPT IN EVERY METRO STYLED PAGE!!!-->
+<script>
+  fetch('/ui/metro/independent_charms.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('content-placeholder').innerHTML = html;
+    })
+    .catch(error => console.error('Error loading content:', error));
+</script>
+<div id="content-placeholder"></div>
+
+<!--INCLUDE THIS SCRIPT IN EVERY METRO STYLED PAGE!!!-->
+<script>
+/* Set the width of the sidebar to 250px (show it) */
+    function openNav() {
+      document.getElementById("mySidepanel").style.width = "250px";
+    }
+    
+    /* Set the width of the sidebar to 0 (hide it) */
+
+    function closeNav() {
+      document.getElementById("mySidepanel").style.width = "0";
+    }
+</script>
+
+
+
+
+</html>

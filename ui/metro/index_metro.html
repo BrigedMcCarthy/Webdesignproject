@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html> <!--LINK EVERY METRO PAGE TO metro_style.css EVEN THOUGH ITS LINKED IN THE FETCHED PAGE!!!-->
+    <head>
+    <link rel="stylesheet" href="metro_style.css">
+</head>
+<!--INCLUDE THIS SCRIPT IN EVERY METRO STYLED PAGE!!!-->
+<script>
+  fetch('/ui/metro/independent_charms.html')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('content-placeholder').innerHTML = html;
+    })
+    .catch(error => console.error('Error loading content:', error));
+</script>
+
+<script>$(function() {
+ 
+    // if the function argument is given to overlay,
+    // it is assumed to be the onBeforeLoad event listener
+    $("a[rel]").overlay({
+ 
+        mask: 'darkred',
+        effect: 'apple',
+ 
+        onBeforeLoad: function() {
+ 
+            // grab wrapper element inside content
+            var wrap = this.getOverlay().find(".contentWrap");
+ 
+            // load the page specified in the trigger
+            wrap.load(this.getTrigger().attr("href"));
+        }
+ 
+    });
+});</script>
+
+<div id="content-placeholder"></div>
+
+<!--INCLUDE THIS SCRIPT IN EVERY METRO STYLED PAGE!!!-->
+<script>
+/* Set the width of the sidebar to 250px (show it) */
+    function openNav() {
+      document.getElementById("mySidepanel").style.width = "250px";
+    }
+    
+    /* Set the width of the sidebar to 0 (hide it) */
+
+    function closeNav() {
+      document.getElementById("mySidepanel").style.width = "0";
+    }
+</script>
+</html>
