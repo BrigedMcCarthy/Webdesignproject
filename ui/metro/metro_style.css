@@ -6,11 +6,11 @@ BURN BURN BURN BURN BURN BURN
 */
 
 .sidepanel {
-    padding-top: 15%;
-    padding-bottom: 15%;
+    padding-top: 15vh;
+    padding-bottom: 15vh;
     float:right;
     right: 0; /* Positions the sidebar to the right edge */
-    height: 100%; /* Specify a height */
+    height: 50%; /* Specify a height */
     width: 0; /* 0 width - change this with JavaScript */
     z-index: 1; /* Stay on top */
     background-image: url("cbar.png");
@@ -49,7 +49,7 @@ BURN BURN BURN BURN BURN BURN
   /* The sidepanel links */
   .sidepanel a {
     float:right;
-    padding: 8px 8px 8px 32px;
+    padding: 8px 8px 8px 50px;
     text-decoration: none;
     font-size: 25px;
     color: #818181;
