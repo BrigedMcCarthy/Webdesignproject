@@ -111,6 +111,16 @@ BURN BURN BURN BURN BURN BURN
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.bottom-banner {
+  background-color: rgb(105, 105, 105); /* Dark background color */
+  color: white; /* White text color */
+  text-align: left; /* Center align text */
+  width: 100vw; /* Full width */
+  height: 5vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
 
 
 .top-banner h1 {
