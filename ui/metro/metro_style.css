@@ -1,9 +1,6 @@
 /* The sidepanel menu */
-/*
-(to the tune of jingle bells)
-WHY THE FUCK WONT THIS WORK EVER 
-BURN BURN BURN BURN BURN BURN 
-*/
+
+
 
 .sidepanel {
     padding-top: 15vh;
@@ -112,6 +109,8 @@ BURN BURN BURN BURN BURN BURN
 }
 
 .bottom-banner {
+  position: absolute;
+  bottom: 0;
   background-color: rgb(105, 105, 105); /* Dark background color */
   color: white; /* White text color */
   text-align: left; /* Center align text */
@@ -119,6 +118,10 @@ BURN BURN BURN BURN BURN BURN
   height: 5vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+/*
+Something is broken here
+i can feel it
+*/
 
 
 
@@ -131,6 +134,7 @@ BURN BURN BURN BURN BURN BURN
 .top-banner p {
   margin-bottom: 15px;
 }
+
 
 body {
   margin: 0;
