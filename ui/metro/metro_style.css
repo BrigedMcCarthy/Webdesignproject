@@ -109,12 +109,43 @@
 }
 
 .bottom-banner {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
   background-color: rgb(105, 105, 105); /* Dark background color */
   color: white; /* White text color */
   text-align: left; /* Center align text */
   height: 5vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.bottom-banner p {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  background-color: rgb(105, 105, 105); /* Dark background color */
+  color: white; /* White text color */
+  text-align: left; /* Center align text */
+  height: 5vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+tr {
+  background-color: orange;
+  position: sticky;
+  height: 15px;
+  width: 15%;
+  z-index: 2;
+}
+
+td {
+  background-color: orange;
+  position: sticky;
+  height: 12vh;
+  width: 15%;
+  z-index: 2;
+}
+
 /*
 Something is broken here
 i can feel it
