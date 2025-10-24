@@ -2,6 +2,7 @@
 
 - [ ] Clean up CSS code
 - [ ] Fill empty pages
+- [ ] Page that displays current browser, user-agent, and ip 
 
 ---
 
@@ -12,9 +13,9 @@
 - [ ] Working start screen
 - [ ] Ability to open start screen from charms bar
 - [ ] User-agent detection 
+- [ ] Multiple sizes of start screen tiles
 - [ ] Moveable tiles on start screen
 - [ ] Ability to launch windows apps from start screen
-- [ ] Page that displays current browser, user-agent, and ip 
 
 ---
 

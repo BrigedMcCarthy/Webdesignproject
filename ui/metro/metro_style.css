@@ -131,7 +131,7 @@
 }
 
 tr {
-  background-color: orange;
+/*  background-color: orange; Debug Colour to check if the tables are sizing correctly   */
   position: sticky;
   height: 15px;
   width: 15%;

@@ -1,0 +1,115 @@
+<!--
+Test of making the start screen look more like the win8x 
+start screen by adding multiple tile sizes
+-->
+
+
+<html>
+<head>
+    <title>Metro Start Menu</title>
+    <link rel="stylesheet" href="/ui/metro/metro_style.css">
+</head>
+
+<style>
+#wrap { width: 600px; height: 390px; padding: 0; overflow: hidden; }
+#frame { width: 100%; height: 300%; border: 1px solid black; }
+#frame { zoom: 0.75; -moz-transform: scale(0.75); -moz-transform-origin: 0 0; }
+
+table {
+    padding-left: 12vh;
+    padding-top: 10vh;
+}
+
+td {
+    background-color: rgb(130, 166, 255);
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    /* background-image: url('/ui/metro/win8start.jpg'); */
+    background-color: #250040;
+}
+h1  {
+    font-weight: 300; /* Makes the heading text light */
+    font-size: 50;
+    color: white;
+    padding-left: 120px;
+    padding-top: 50px;
+}
+
+h2  {
+    font-weight: 500; /* Makes the heading text light */
+    font-size: 40;
+    color: white;
+    padding-left: 120px;
+    padding-top: 50px;
+}
+
+.nested {
+    background-color: blue;
+}
+
+img {
+    display: inline;
+    height: 10vh;
+    width: 5vw;
+
+}
+
+</style>
+
+<body>
+
+<h1 style="float: left; display: inline;">Start</h1>
+<h2 style="float: right; display: inline;">%%USERNAME%%<img style="float: right;" src="/images/placeholder.png"></img></h2>
+<table style="height: 120px;" border="0" width="100%">
+<tbody>
+<tr>
+<td style="text-align: center;">%%MAIL APP%%</td>
+<td style="text-align: center;">%%PEOPLE APP%%</td>
+<td style="text-align: center;">%%NEWS APP%%</td>
+<td style="text-align: center;">%%MESSAGING APP%%</td>
+</tr>
+<tr>
+<div class="menu_item"><td style="text-align: center;">
+
+      <!-- Nested Table starts here -->
+      <table>
+        <tr>
+          <th>Nested Header 1</th>
+          <th>Nested Header 2</th>
+        </tr>
+        <tr>
+          <td class="nested">Nested Data 1</td>
+          <td class="nested">Nested Data 2</td>
+        </tr>
+      </table>
+      <!-- Nested Table ends here -->
+
+</td></div>
+<div class="menu_item"><td style="text-align: center;">%%WEATHER%%</td></div>
+<div class="menu_item"><td style="text-align: center;">%%CALENDER%%</td></div>
+<div class="menu_item"><td style="text-align: center;">%%PHOTOS%%</td></div>
+</tr>
+<tr>
+<td style="text-align: center;">%%FINACE%%</td>
+<td style="text-align: center;">%%INTERNET EXPLORER%%</td>
+<td style="text-align: center;">%%MS STORE%%</td>
+<td style="text-align: center;">%%MAPS%%</td>
+</tr>
+<tr>
+<td style="text-align: center;">%%ONE DRIVE%%</td>
+<!-- *desktop* peak button <td style="width: 95.3125px; height: 67px; text-align: center;"><iframe id="frame" src="/ui/metro/metro_ui.html" sandbox="allow-same-origin"></iframe></td>-->
+<td style="text-align: center;">%%PLACEHOLDER%%</td>
+<td style="text-align: center;">%%PLACEHOLDER%%</td>
+<td style="text-align: center;">%%PLACEHOLDER%%</td>
+</tr>
+</tbody>
+</table>
+
+
+
+<div class="bottom-banner">
+    <p>SEARCH</p>
+</div>
+</html>
