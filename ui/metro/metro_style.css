@@ -109,7 +109,7 @@
 }
 
 .bottom-banner {
-  position: absolute;
+  position: fixed;
   width: 100%;
   bottom: 0;
   background-color: rgb(105, 105, 105); /* Dark background color */
@@ -120,7 +120,7 @@
 }
 
 .bottom-banner p {
-  position: absolute;
+  position: fixed;
   width: 100%;
   bottom: 0;
   background-color: rgb(105, 105, 105); /* Dark background color */
@@ -131,19 +131,17 @@
 }
 
 tr {
-/*  background-color: orange; Debug Colour to check if the tables are sizing correctly   */
+background-color: orange; /*Debug Colour to check if the tables are sizing correctly*/
   position: sticky;
   height: 15px;
   width: 15%;
-  z-index: 2;
 }
 
 td {
-  background-color: orange;
+  background-color: orange; /*Again its a debug colour*/
   position: sticky;
   height: 12vh;
   width: 15%;
-  z-index: 2;
 }
 
 /*
