@@ -198,3 +198,34 @@ body {
   margin: 0;
   position: static;
 }
+
+.tile.dragging {
+  opacity: 0.5; /* Visual feedback during drag */
+}
+
+.tile {
+  width: 100px;
+  height: 100px;
+  background-color: lightblue;
+  border: 1px solid blue;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+}
+
+.drop-zone {
+  width: 200px;
+  height: 200px;
+  background-color: lightgray;
+  border: 2px dashed gray;
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tile.dragging {
+  opacity: 0.5; /* Visual feedback during drag */
+}
