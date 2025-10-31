@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Metro Revamp — revamp2</title>
+  <link rel="stylesheet" href="metro_revamp.css">
+</head>
+<body>
+  <header class="start-header">
+    <div class="start-left">
+      <button class="hamburger" aria-label="menu">☰</button>
+      <h1 class="start-brand">Start</h1>
+    </div>
+    <div class="start-right">
+      <div class="search">🔍</div>
+      <div class="user">
+        <div class="user-pic">A</div>
+        <div class="user-name">Alex</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="start-main">
+    <section class="group">
+      <h2 class="group-title">Productivity</h2>
+      <div class="group-grid" id="tileGrid">
+        <a href="#" class="tile tile-large tile-mail" data-title="Mail" draggable="true">
+          <div class="tile-content">Mail</div>
+        </a>
+
+        <a href="#" class="tile tile-wide tile-calendar" data-title="Calendar" draggable="true">
+          <div class="tile-content">Calendar</div>
+        </a>
+
+        <a href="#" class="tile tile-medium tile-people" data-title="People" draggable="true">
+          <div class="tile-content">People</div>
+        </a>
+
+        <a href="#" class="tile tile-medium tile-messaging" data-title="Messaging" draggable="true">
+          <div class="tile-content">Messaging</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2 class="group-title">Entertainment</h2>
+      <div class="group-grid">
+        <a href="#" class="tile tile-medium tile-photos" data-title="Photos" draggable="true">
+          <div class="tile-content">Photos</div>
+        </a>
+
+        <a href="#" class="tile tile-medium tile-music" data-title="Music" draggable="true">
+          <div class="tile-content">Music</div>
+        </a>
+
+        <a href="#" class="tile tile-large tile-video tile-accent" data-title="Video" draggable="true">
+          <div class="tile-content">Video</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2 class="group-title">Weather & News</h2>
+      <div class="group-grid">
+        <a href="#" class="tile tile-medium tile-weather" data-title="Weather" draggable="true">
+          <div class="tile-content">Weather</div>
+        </a>
+
+        <a href="#" class="tile tile-medium tile-news" data-title="News" draggable="true">
+          <div class="tile-content">News</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="start-footer">Signed in as Alex — Tiles are draggable</footer>
+
+  <script>
+    // Basic interaction: announce tile title on click (progressive enhancement)
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      while (t && t !== document.body) {
+        if (t.classList && t.classList.contains('tile')) {
+          var title = t.getAttribute('data-title') || 'Tile';
+          // Small enhancement: temporary highlight
+          t.classList.add('tile-active');
+          setTimeout(function () { t.classList.remove('tile-active'); }, 350);
+          // For demo purposes show title in console
+          if (window.console) console.log('Tile clicked:', title);
+          e.preventDefault();
+          return false;
+        }
+        t = t.parentNode;
+      }
+    }, false);
+  </script>
+  <script src="metro_revamp.js"></script>
+</body>
+</html>

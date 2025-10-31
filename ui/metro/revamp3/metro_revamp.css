@@ -1,0 +1,111 @@
+:root{
+  /* Purple Start-screen gradient (approximate to tile-settings.jpg) */
+  --bg-top: #6A1B9A; /* lighter purple */
+  --bg-bottom: #4A0F6A; /* darker purple */
+  --text: #ffffff;
+  --muted: #c7e9e6;
+
+  /* layout variables (tile size and gap) - change per breakpoint to preserve arrangement */
+  --tile-size: 210px; /* base tile size (increased 50%) */
+  --gap: 27px;
+
+  /* tile palette */
+  --tile-blue: #0078d7;
+  --tile-light-blue: #00a1f1;
+  --tile-green: #32c65d;
+  --tile-teal: #00aba9;
+  --tile-orange: #f7630c;
+  --tile-yellow: #ffb900;
+  --tile-purple: #7b1fa2;
+  --tile-red: #e81123;
+}
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+  color:var(--text);
+}
+
+.start-header{display:flex;justify-content:space-between;align-items:center;padding:18px 26px;background:transparent}
+.start-left{display:flex;align-items:center;gap:12px}
+.hamburger{background:transparent;border:none;color:rgba(255,255,255,0.9);font-size:20px}
+.start-brand{margin:0;font-size:22px;font-weight:700;color:rgba(255,255,255,0.95)}
+.start-right{display:flex;align-items:center;gap:12px}
+.controls{display:flex;align-items:center}
+.controls button#resetLayout{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+  padding:6px 10px;
+  border-radius:4px;
+  font-weight:600;
+  cursor:pointer;
+}
+.controls button#resetLayout:hover{ background: rgba(255,255,255,0.12); }
+.user-pic{width:36px;height:36px;border-radius:4px;background:var(--tile-light-blue);display:flex;align-items:center;justify-content:center;font-weight:700}
+
+.start-main{padding:30px 36px}
+.group{margin-bottom:28px}
+.group-title{color:rgba(255,255,255,0.9);font-size:13px;margin:6px 0 12px;font-weight:600}
+
+.group-grid{display:grid;grid-template-columns: repeat(4, var(--tile-size));grid-auto-rows:var(--tile-size);gap:var(--gap);align-items:start}
+
+.tile{position:relative;border-radius:2px;color:var(--text);text-decoration:none;display:block;overflow:hidden;width:100%;height:100%;}
+.tile .tile-content{position:absolute;left:calc(var(--gap) - 4px);bottom:calc(var(--gap) - 6px);padding:0;margin:0;font-weight:700;font-size:calc(var(--tile-size) * 0.1)}
+
+.tile-icon{
+  position:absolute;
+  top:calc(var(--gap) * 0.45);
+  left:calc(var(--gap) * 0.6);
+  width: calc(var(--tile-size) * 0.22);
+  height: calc(var(--tile-size) * 0.22);
+  opacity:0.95;
+  color: rgba(255,255,255,0.95);
+}
+.tile-small .tile-icon{ width: calc(var(--tile-size) * 0.18); height: calc(var(--tile-size) * 0.18); }
+
+/* tile sizes */
+.tile-small{grid-column:span 1;grid-row:span 1}
+.tile-medium{grid-column:span 1;grid-row:span 1}
+.tile-wide{grid-column:span 2;grid-row:span 1}
+.tile-large{grid-column:span 2;grid-row:span 2}
+.tile-accent{box-shadow: 0 0 0 2px rgba(255,255,255,0.03) inset}
+
+/* color mapping */
+.tile-mail{background:var(--tile-blue)}
+.tile-calendar{background:var(--tile-purple)}
+.tile-people{background:var(--tile-teal)}
+.tile-photos{background:var(--tile-light-blue)}
+.tile-music{background:var(--tile-yellow)}
+.tile-video{background:var(--tile-orange)}
+.tile-weather{background:var(--tile-teal)}
+.tile-news{background:var(--tile-red)}
+.tile-messaging{background:var(--tile-green)}
+
+.tile:hover{transform:translateY(-6px);box-shadow:0 12px 24px rgba(0,0,0,0.28)}
+
+/* drag visuals */
+.tile.dragging{opacity:0.6;transform:scale(0.98)}
+.tile.placeholder{outline:3px dashed rgba(255,255,255,0.18);background:rgba(255,255,255,0.02)}
+
+.start-footer{padding:12px 26px;color:rgba(255,255,255,0.85);font-size:13px}
+
+
+/* Responsive breakpoints: scale tile sizes while keeping 4-column layout visually consistent */
+@media (min-width:1200px){
+  :root{ --tile-size: 270px; --gap: 33px; }
+}
+@media (min-width:900px) and (max-width:1199px){
+  :root{ --tile-size: 240px; --gap: 30px; }
+}
+@media (min-width:600px) and (max-width:899px){
+  :root{ --tile-size: 180px; --gap: 21px; }
+}
+@media (max-width:599px){
+  :root{ --tile-size: 150px; --gap: 18px; }
+  .tile .tile-content{font-size:12px}
+}
+
+/* optional debug grid overlay (single-line toggle) */
+/* .group-grid{ background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 158px 158px, 158px 158px; } */

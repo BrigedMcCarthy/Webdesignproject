@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Metro Revamp 3 — Start</title>
+  <link rel="stylesheet" href="metro_revamp.css">
+</head>
+<body>
+  <header class="start-header">
+    <div class="start-left">
+      <button class="hamburger" aria-label="menu">☰</button>
+      <h1 class="start-brand">Start</h1>
+    </div>
+    <div class="start-right">
+      <div class="search">🔍</div>
+      <div class="controls">
+        <button id="resetLayout" title="Reset layout" aria-label="Reset layout">Reset</button>
+      </div>
+      <div class="user">
+        <div class="user-pic">A</div>
+        <div class="user-name">Alex</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="start-main">
+    <section class="group">
+      <h2 class="group-title">Productivity</h2>
+      <div class="group-grid" id="productivityGrid">
+        <!-- Mail: large 2x2 at top-left -->
+        <a href="#" class="tile tile-large tile-mail" data-id="mail" draggable="true" style="grid-column:1 / span 2; grid-row:1 / span 2;">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/></svg>
+          <div class="tile-content">Mail</div>
+        </a>
+
+        <!-- Calendar: placed to the right of Mail, wide (2 columns x 1 row) -->
+        <a href="#" class="tile tile-wide tile-calendar" data-id="calendar" draggable="true" style="grid-column:3 / span 2; grid-row:1 / span 1;">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM5 10h14v10H5z"/></svg>
+          <div class="tile-content">Calendar</div>
+        </a>
+
+        <!-- People: small tile below Calendar -->
+        <a href="#" class="tile tile-small tile-people" data-id="people" draggable="true" style="grid-column:3 / span 1; grid-row:2 / span 1;">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-6-3.5z"/></svg>
+          <div class="tile-content">People</div>
+        </a>
+
+        <!-- Messaging: small tile next to People -->
+        <a href="#" class="tile tile-small tile-messaging" data-id="messaging" draggable="true" style="grid-column:4 / span 1; grid-row:2 / span 1;">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v14l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          <div class="tile-content">Messaging</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2 class="group-title">Entertainment</h2>
+      <div class="group-grid" id="entertainmentGrid">
+        <!-- Photos and Music small tiles on the left -->
+        <a href="#" class="tile tile-small tile-photos" data-id="photos" draggable="true" style="grid-column:1 / span 1; grid-row:1 / span 1;">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 19V7c0-1.1-.9-2-2-2H5C3.9 5 3 5.9 3 7v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3 3.5-4.5L19 18H5l3.5-4.5z"/></svg>
+          <div class="tile-content">Photos</div>
+        </a>
+
+        <a href="#" class="tile tile-small tile-music" data-id="music" draggable="true" style="grid-column:2 / span 1; grid-row:1 / span 1;">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+          <div class="tile-content">Music</div>
+        </a>
+
+        <!-- Video: large tile to the right spanning 2x2 -->
+        <a href="#" class="tile tile-large tile-video tile-accent" data-id="video" draggable="true" style="grid-column:3 / span 2; grid-row:1 / span 2;">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10 8.64L15.27 12 10 15.36V8.64M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2z"/></svg>
+          <div class="tile-content">Video</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2 class="group-title">Weather & News</h2>
+      <div class="group-grid" id="infoGrid">
+        <a href="#" class="tile tile-small tile-weather" data-id="weather" draggable="true" style="grid-column:1 / span 1; grid-row:1 / span 1;">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19 18.5a4.5 4.5 0 0 0-4.5-4.5H10a4 4 0 1 0 0 8h9v-3.5z"/></svg>
+          <div class="tile-content">Weather</div>
+        </a>
+
+        <a href="#" class="tile tile-small tile-news" data-id="news" draggable="true" style="grid-column:2 / span 1; grid-row:1 / span 1;">
+          <svg class="tile-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 6H3v12h18V6zm-2 10H5V8h14v8zM7 10h5v1H7z"/></svg>
+          <div class="tile-content">News</div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="start-footer" id="startFooter">User agent: <span id="ua">(unknown)</span></footer>
+
+  <script src="metro_revamp.js"></script>
+</body>
+</html>

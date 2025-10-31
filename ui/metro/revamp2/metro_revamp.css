@@ -1,0 +1,201 @@
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.start-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 20px;
+  background: linear-gradient(#111,#0e0e0e);
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.start-left{display:flex;align-items:center;gap:12px}
+.hamburger{background:transparent;border:none;color:#ddd;font-size:20px;padding:6px;cursor:pointer}
+.start-brand{margin:0;font-size:20px;color:#e6e6e6}
+.start-right{display:flex;align-items:center;gap:12px}
+.search{color:#cfcfcf;font-size:18px}
+.user{display:flex;align-items:center;gap:8px}
+.user-pic{width:36px;height:36px;border-radius:4px;background:var(--tile-light-blue);display:flex;align-items:center;justify-content:center;font-weight:700}
+.user-name{color:#cfcfcf}
+
+/* Main area with groups */
+.start-main{padding:18px}
+.group{margin-bottom:28px}
+.group-title{color:var(--muted);font-size:13px;margin:8px 0 12px;font-weight:600}
+
+/* Grid: fixed tile grid using CSS Grid */
+.group-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, 120px);
+  grid-auto-rows: 120px;
+  gap:18px;
+}
+
+.tile{
+  display:block;
+  color:var(--text);
+  text-decoration:none;
+  border-radius:2px;
+  overflow:hidden;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.25) inset;
+  transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  align-items:center;justify-content:center;display:flex;
+}
+.tile .tile-content{padding:12px;font-weight:700;font-size:16px}
+
+/* Tile sizes (grid spans) */
+.tile-small{grid-column: span 1; grid-row: span 1; background:var(--tile-light-blue)}
+.tile-medium{grid-column: span 1; grid-row: span 1; background:var(--tile-green)}
+.tile-wide{grid-column: span 2; grid-row: span 1; height:auto; background:var(--tile-purple)}
+.tile-large{grid-column: span 2; grid-row: span 2; background:var(--tile-orange)}
+.tile-accent{background:var(--tile-yellow)}
+
+/* Additional named tiles (explicit mapping) */
+.tile-mail{background:var(--tile-blue)}
+.tile-calendar{background:var(--tile-purple)}
+.tile-people{background:var(--tile-teal)}
+.tile-music{background:var(--tile-yellow)}
+.tile-photos{background:var(--tile-light-blue)}
+.tile-video{background:var(--tile-orange)}
+.tile-weather{background:var(--tile-teal)}
+.tile-news{background:var(--tile-red)}
+
+.tile:hover{transform: translateY(-6px); box-shadow: 0 10px 20px rgba(0,0,0,0.35)}
+.tile-active{outline:3px solid rgba(255,255,255,0.12)}
+
+/* Drag states */
+.tile.over{outline:3px dashed rgba(255,255,255,0.12)}
+.tile.dragging{opacity:0.6;transform:scale(0.98)}
+
+/* Footer */
+.start-footer{padding:12px 20px;color:#a9a9a9;border-top:1px solid rgba(255,255,255,0.02)}
+
+/* Mobile responsiveness: stack grid columns */
+@media (max-width:640px){
+  .group-grid{grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); grid-auto-rows: 140px}
+  .tile .tile-content{font-size:14px}
+}
+
+/* Debug: show snap grid — uncomment the single line below to enable a visual grid that aligns with the tile spacing. */
+/* .group-grid { background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 138px 138px, 138px 138px; } */
+/* Windows 8 Start-screen styled stylesheet — tuned to match tile-settings.jpg reference */
+:root{
+  /* gradient background tuned to the screenshot (approximate) */
+  --bg-start: #007878; /* top */
+  --bg-end:   #005b5b; /* bottom */
+  --text: #ffffff;
+  --muted: #9ca3a6;
+
+  /* Windows 8 style tile palette (approximate) */
+  --tile-blue: #2b5797;   /* deep blue */
+  --tile-light-blue: #2d89ef; /* bright blue */
+  --tile-green: #00a300;  /* green */
+  --tile-teal: #00aba9;   /* teal */
+  --tile-orange: #da532c; /* orange */
+  --tile-yellow: #ffb900; /* yellow/accent */
+  --tile-purple: #8e44ad; /* purple */
+  --tile-red: #e81123;    /* red */
+}
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* subtle vertical gradient like the Start screen */
+  background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.start-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 20px;
+  background: rgba(0,0,0,0.12);
+  border-bottom:1px solid rgba(255,255,255,0.025);
+}
+.start-left{display:flex;align-items:center;gap:12px}
+.hamburger{background:transparent;border:none;color:#ddd;font-size:20px;padding:6px;cursor:pointer}
+.start-brand{margin:0;font-size:20px;color:#e6e6e6}
+.start-right{display:flex;align-items:center;gap:12px}
+.search{color:#cfcfcf;font-size:18px}
+.user{display:flex;align-items:center;gap:8px}
+.user-pic{width:36px;height:36px;border-radius:4px;background:var(--tile-light-blue);display:flex;align-items:center;justify-content:center;font-weight:700}
+.user-name{color:#cfcfcf}
+
+/* Main area with groups */
+.start-main{padding:28px 28px 40px 28px}
+.group{margin-bottom:28px}
+.group-title{color:var(--muted);font-size:13px;margin:6px 0 12px;font-weight:600}
+
+/* Grid: fixed tile grid using CSS Grid */
+.group-grid{
+  display:grid;
+  /* columns of consistent 140px tiles with 18px gap to match the screenshot */
+  grid-template-columns: repeat(auto-fill, 140px);
+  grid-auto-rows: 140px;
+  gap:18px;
+  align-items:start;
+}
+
+.tile{
+  display:block;
+  color:var(--text);
+  text-decoration:none;
+  border-radius:2px;
+  overflow:hidden;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.25) inset;
+  transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  position:relative; /* allow absolute positioning of label/content */
+}
+/* Position tile label in the lower-left like in the reference */
+.tile .tile-content{position:absolute;left:12px;bottom:10px;padding:0;margin:0;font-weight:700;font-size:14px}
+
+/* Tile sizes (grid spans) */
+.tile-small{grid-column: span 1; grid-row: span 1; background:var(--tile-light-blue)}
+.tile-medium{grid-column: span 1; grid-row: span 1; background:var(--tile-green)}
+.tile-wide{grid-column: span 2; grid-row: span 1; height:auto; background:var(--tile-purple)}
+.tile-large{grid-column: span 2; grid-row: span 2; background:var(--tile-orange)}
+.tile-accent{background:var(--tile-yellow)}
+
+/* Additional named tiles (explicit mapping) */
+.tile-mail{background:var(--tile-blue)}
+.tile-calendar{background:var(--tile-purple)}
+.tile-people{background:var(--tile-teal)}
+.tile-music{background:var(--tile-yellow)}
+.tile-photos{background:var(--tile-light-blue)}
+.tile-video{background:var(--tile-orange)}
+.tile-weather{background:var(--tile-teal)}
+.tile-news{background:var(--tile-red)}
+
+.tile:hover{transform: translateY(-6px); box-shadow: 0 10px 20px rgba(0,0,0,0.35)}
+.tile-active{outline:3px solid rgba(255,255,255,0.12)}
+
+/* Drag states */
+.tile.over{outline:3px dashed rgba(255,255,255,0.12)}
+.tile.dragging{opacity:0.6;transform:scale(0.98)}
+
+/* Footer */
+.start-footer{padding:12px 20px;color:#a9a9a9;border-top:1px solid rgba(255,255,255,0.02)}
+
+/* Responsive adjustments */
+@media (max-width:960px){
+  .group-grid{grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); grid-auto-rows: 120px}
+  .tile .tile-content{font-size:13px}
+}
+@media (max-width:640px){
+  .group-grid{grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); grid-auto-rows: 140px}
+  .tile .tile-content{font-size:14px}
+}
+
+/* Debug: show snap grid — uncomment the single line below to enable a visual grid that aligns with the tile spacing. */
+/* .group-grid { background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 158px 158px, 158px 158px; } */
