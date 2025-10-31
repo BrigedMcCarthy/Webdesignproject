@@ -1,12 +1,32 @@
-            - name: Run Py Script
-  # You may pin to the exact commit or the version.
-  # uses: revanth-reddy/runpy-action@bd650eac0e5e38c42fae951932db067e9c91d6e9
-  uses: revanth-reddy/runpy-action@release
-  with:
-    # Py script
-    script: /scripts/generate_filetree.py
-    # Fail step if the return code from running the script is non-zero
-    fail-on-error: # optional, default is true
-    # Include utility functions
-    util: # optional, default is true
-          
+name: Run generate_filetree.py
+
+on:
+  push:
+    branches: [ main, site-theme-v2 ]
+  workflow_dispatch:
+  schedule:
+    # Runs daily at 00:00 UTC; adjust if you want a different frequency
+    - cron: '0 0 * * *'
+
+jobs:
+  run-script:
+    name: Run generate_filetree
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies (if any)
+        run: |
+          python -m pip install --upgrade pip
+          # Install only if requirements.txt exists to avoid failing the job
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run generate_filetree.py
+        run: |
+          python scripts/generate_filetree.py
