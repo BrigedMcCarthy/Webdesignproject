@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Webdirectory Viewer — Retro 2000s</title>
+  <link rel="stylesheet" href="metro_revamp.css">
+</head>
+<body>
+  <div class="page-wrap">
+    <header class="retro-header">
+      <marquee behavior="scroll" direction="left" class="marquee">Welcome to the Webdirectory Viewer — Freshly baked file listing!</marquee>
+      <h1 class="title">My Website File Index <span class="blink">[2000s Mode]</span></h1>
+    </header>
+
+    <nav class="toolbar" role="toolbar" aria-label="Viewer toolbar">
+      <button id="refreshBtn" type="button" aria-label="Refresh file list">Refresh</button>
+      <label><input type="checkbox" id="autoRefresh" checked aria-label="Auto refresh"> Auto-refresh</label>
+      <input id="searchInput" class="search-input" type="search" placeholder="Search files and folders..." aria-label="Search files">
+      <button id="expandAllBtn" type="button" aria-label="Expand all folders">Expand All</button>
+      <button id="collapseAllBtn" type="button" aria-label="Collapse all folders">Collapse All</button>
+      <button id="resetBuildBtn" type="button" aria-label="Reset build to 1">Reset Build</button>
+      <button id="copyResetBtn" type="button" aria-label="Copy reset JSON">Copy Reset JSON</button>
+      <button id="themeToggleBtn" type="button" title="Toggle theme" aria-pressed="false" aria-label="Toggle theme">Theme</button>
+      <span id="buildNumber" class="last-updated" aria-live="polite">Build: --</span>
+      <span id="hitCounter" class="hit-counter" aria-live="polite">Hits: 0</span>
+      <span id="lastUpdated" class="last-updated" aria-live="polite">Last updated: --</span>
+    </nav>
+
+    <main class="content">
+      <section class="file-browser">
+        <h2>Site directory</h2>
+        <div id="fileTree" class="file-tree" role="tree" aria-live="polite" aria-label="Site file tree">Loading file list…</div>
+      </section>
+      <aside class="explain">
+        <h3>About</h3>
+        <p>This retro-styled page shows the file structure of the site. It polls <code>/filetree.json</code> and updates automatically. For automatic updates, run the generator script described in the README.</p>
+        <p><a href="#" id="guestbookLink" class="guestbook-link">Sign the Guestbook</a></p>
+        <div id="guestbookEntries" class="guestbook-entries" aria-live="polite"></div>
+        <p>Designed with love for the early web: table-like layouts, marquee headers and bold gradients.</p>
+      </aside>
+    </main>
+
+    <footer class="retro-footer">© 2001 - Webdirectory Viewer</footer>
+  </div>
+
+  <!-- Preview modal (hidden by default) -->
+  <div id="previewModal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header">
+        <strong id="previewTitle">Preview</strong>
+        <button id="modalCloseBtn" aria-label="Close preview">✕</button>
+      </div>
+      <div id="previewBody" class="modal-body">Loading…</div>
+      <div class="modal-footer">
+        <a id="previewDownload" class="btn" download>Download</a>
+        <button id="copyPermalinkBtn">Copy Link</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="metro_revamp.js"></script>
+</body>
+</html>

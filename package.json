@@ -1,0 +1,12 @@
+{
+  "name": "webdesignproject",
+  "version": "1.0.0",
+  "description": "Static web design project — helper scripts",
+  "scripts": {
+    "gen-tree": "node scripts/generate_filetree.js",
+    "watch-tree": "node scripts/generate_filetree.js --watch"
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.3"
+  }
+}
