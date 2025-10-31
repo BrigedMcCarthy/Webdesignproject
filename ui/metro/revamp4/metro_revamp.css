@@ -1,0 +1,91 @@
+/* revamp4 – Retro 2000s Webdirectory Viewer styles */
+:root{
+  --bg1: #004080;
+  --bg2: #001a33;
+  --panel: #fff8e0;
+  --ink: #001033;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family: 'Trebuchet MS', Verdana, Arial, sans-serif;background:repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 6px), linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--ink)}
+
+.page-wrap{max-width:1100px;margin:18px auto;background:linear-gradient(180deg,#fff,#f2f7ff);border:6px double #ffcc00;padding:12px}
+.retro-header{background:linear-gradient(90deg,#ffcc00,#ff9900);padding:6px 8px;border:3px inset #fff;text-align:center}
+.marquee{font-weight:700;color:#001033}
+.title{margin:8px 0 6px;font-size:24px;text-align:center}
+.blink{color:#ff0000;font-weight:900;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+.toolbar{display:flex;gap:12px;align-items:center;padding:8px;background:#fff2cc;border:2px groove #ffd27f}
+.toolbar button{background:#0080ff;color:#fff;border:2px outset #004f99;padding:6px 10px;cursor:pointer}
+.last-updated{margin-left:auto;font-size:12px;color:#333}
+.hit-counter{margin-left:12px;background:#000;color:#0f0;font-weight:700;padding:4px 8px;border:2px inset #0f0}
+
+.guestbook-link{display:inline-block;padding:6px 8px;background:linear-gradient(180deg,#fff,#ffd);border:2px outset #f90;color:#003366;font-weight:700}
+.guestbook-entries{margin-top:8px;background:#fffef0;border:2px groove #ffd27f;padding:8px;max-height:160px;overflow:auto}
+
+/* Old-school decorative borders and side pattern */
+.page-wrap{box-shadow:0 0 0 4px rgba(0,0,0,0.08) inset, 0 0 8px rgba(0,0,0,0.2) }
+body{background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 2px, transparent 2px 8px), linear-gradient(180deg,var(--bg1),var(--bg2));}
+
+/* directory list styles for retro look */
+.file-tree ul{list-style:none;padding-left:18px;margin:6px 0}
+.file-tree li{padding:6px;border-bottom:1px dotted rgba(0,0,0,0.06);display:flex;align-items:center;gap:8px}
+.file-tree .dir-header{display:flex;align-items:center;gap:8px}
+.file-tree .toggle{width:22px;height:22px;line-height:18px;border:2px outset #ccc;background:linear-gradient(180deg,#fff,#ddd);cursor:pointer;font-weight:bold}
+.file-tree .folder{color:#003366;font-weight:800}
+.file-tree .file{color:#333}
+.file-tree .meta{font-size:11px;color:#666;margin-left:8px}
+
+/* guestbook entry styling */
+.guestbook-entries .entry{border-bottom:1px dashed #ccc;padding:6px 0}
+.guestbook-entries .entry .who{font-weight:700;color:#003366}
+.guestbook-entries .entry .when{font-size:11px;color:#666;margin-left:8px}
+/* guestbook controls and sync status */
+.guestbook-entries .entry{position:relative;padding-right:90px}
+.guestbook-entries .entry .controls{position:absolute;right:6px;top:6px;display:flex;flex-direction:column;gap:6px}
+.guestbook-entries .entry .controls button{background:#fff;border:1px solid #ccc;padding:4px 6px;font-size:12px;cursor:pointer}
+.guestbook-entries .entry .sync-badge{display:inline-block;padding:2px 6px;border-radius:10px;font-size:11px;margin-left:8px}
+.guestbook-entries .entry .sync-badge.server{background:#e6ffed;border:1px solid #b6f1c9;color:#1a6b2e}
+.guestbook-entries .entry .sync-badge.local{background:#fff6e6;border:1px solid #ffd9a6;color:#7a4a00}
+
+
+.content{display:flex;gap:16px;padding:12px}
+.file-browser{flex:1;background:var(--panel);padding:12px;border:2px ridge #ddd}
+.explain{width:320px;background:#fffbe6;padding:12px;border:2px outset #ffd27f}
+
+.file-tree ul{list-style: none;padding-left:18px}
+.file-tree li{padding:4px 2px;border-bottom:1px dotted rgba(0,0,0,0.06)}
+.file-tree .folder{font-weight:700;color:#003366}
+.file-tree .file{color:#333}
+.file-tree .meta{font-size:11px;color:#666;margin-left:8px}
+
+.retro-footer{text-align:center;padding:8px;margin-top:12px;background:#ffe8a6;border-top:2px solid #ffd27f}
+
+.small-note{font-size:12px;color:#222}
+
+/* Search input and theme toggle */
+.search-input{padding:6px 8px;border:2px inset #ccc;background:#fff;border-radius:4px;min-width:220px}
+#themeToggleBtn{background:linear-gradient(180deg,#fff,#e6e6e6);color:#003366;border:2px outset #ccc;padding:6px 8px}
+
+/* Modal preview */
+.modal-overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);z-index:1200}
+.modal-overlay[aria-hidden="false"]{display:flex}
+.modal{width:80%;max-width:900px;background:#fff;border:4px solid #ffd27f;padding:12px;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.modal-body{max-height:60vh;overflow:auto;background:#f8f8f8;padding:8px;border:1px solid #ddd}
+.modal-footer{display:flex;gap:12px;justify-content:flex-end;margin-top:8px}
+.modal .btn{background:#0080ff;color:#fff;padding:6px 10px;border-radius:4px;text-decoration:none}
+#modalCloseBtn{background:transparent;border:0;font-size:18px;cursor:pointer}
+
+/* Modern theme (clean) */
+body.modern{background:linear-gradient(180deg,#f6f8fb,#e9eef7);color:#0b2336}
+.page-wrap.modern{background:#fff;border:1px solid #e1e8f0;box-shadow:0 6px 20px rgba(16,24,40,0.05)}
+.toolbar.modern{background:#f1f5f9;border:1px solid #e2e8f0}
+.file-browser.modern{background:#fff;border:1px solid #e6eef8}
+
+/* small focus ring for keyboard nav */
+.file-tree li:focus{outline:3px solid rgba(0,123,255,0.25);outline-offset:2px}
+
+/* small animation for collapse/expand via height transition fallback */
+.file-tree ul{transition: max-height 220ms ease;padding-left:18px}
+

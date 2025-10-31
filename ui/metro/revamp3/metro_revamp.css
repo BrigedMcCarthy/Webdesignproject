@@ -8,6 +8,8 @@
   /* layout variables (tile size and gap) - change per breakpoint to preserve arrangement */
   --tile-size: 210px; /* base tile size (increased 50%) */
   --gap: 27px;
+  /* tile height multiplier: makes tiles taller than they are wide (helps visual density) */
+  --tile-height-mult: 1.25;
 
   /* tile palette */
   --tile-blue: #0078d7;
@@ -49,7 +51,7 @@ body{
 .group{margin-bottom:28px}
 .group-title{color:rgba(255,255,255,0.9);font-size:13px;margin:6px 0 12px;font-weight:600}
 
-.group-grid{display:grid;grid-template-columns: repeat(4, var(--tile-size));grid-auto-rows:var(--tile-size);gap:var(--gap);align-items:start}
+.group-grid{display:grid;grid-template-columns: repeat(4, var(--tile-size));grid-auto-rows: calc(var(--tile-size) * var(--tile-height-mult));gap:var(--gap);align-items:start}
 
 .tile{position:relative;border-radius:2px;color:var(--text);text-decoration:none;display:block;overflow:hidden;width:100%;height:100%;}
 .tile .tile-content{position:absolute;left:calc(var(--gap) - 4px);bottom:calc(var(--gap) - 6px);padding:0;margin:0;font-weight:700;font-size:calc(var(--tile-size) * 0.1)}
@@ -90,6 +92,14 @@ body{
 .tile.placeholder{outline:3px dashed rgba(255,255,255,0.18);background:rgba(255,255,255,0.02)}
 
 .start-footer{padding:12px 26px;color:rgba(255,255,255,0.85);font-size:13px}
+
+/* custom context menu */
+.context-menu{position:fixed;z-index:1200;min-width:160px;background:rgba(18,22,28,0.98);border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 24px rgba(0,0,0,0.6);border-radius:6px;padding:6px 0;font-size:14px;color:var(--text);display:none}
+.context-menu.visible{display:block}
+.context-menu .item{padding:8px 12px;cursor:pointer;white-space:nowrap;color:var(--muted)}
+.context-menu .item:hover{background:rgba(255,255,255,0.02);color:var(--text)}
+.context-menu .item.disabled{opacity:0.45;color:rgba(255,255,255,0.45);pointer-events:none}
+.context-menu .sep{height:1px;background:rgba(255,255,255,0.02);margin:6px 0}
 
 
 /* Responsive breakpoints: scale tile sizes while keeping 4-column layout visually consistent */
