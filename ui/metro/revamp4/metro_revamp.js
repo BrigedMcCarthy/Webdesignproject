@@ -196,33 +196,56 @@
 
   // guestbook: simple client-side guestbook stored in localStorage
   // guestbook: client + server-aware with moderation controls
+  // guestbook sync: queue + server-aware rendering
+  var GUESTBOOK_STORAGE = 'revamp4_guestbook';
+  var GUESTBOOK_QUEUE_KEY = 'revamp4_guestbook_queue';
+
+  function saveGuestbook(arr){ try{ localStorage.setItem(GUESTBOOK_STORAGE, JSON.stringify(arr)); }catch(e){} }
+  function loadLocalGuestbook(){ try{ var s = JSON.parse(localStorage.getItem(GUESTBOOK_STORAGE) || '[]'); return Array.isArray(s) ? s : []; }catch(e){ return []; } }
+  function loadQueue(){ try{ var s = JSON.parse(localStorage.getItem(GUESTBOOK_QUEUE_KEY) || '[]'); return Array.isArray(s) ? s : []; }catch(e){ return []; } }
+  function saveQueue(q){ try{ localStorage.setItem(GUESTBOOK_QUEUE_KEY, JSON.stringify(q)); }catch(e){} }
+
+  function makeId(){ return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,9); }
+
+  // try to read server entries then merge with local and queued entries
   async function loadGuestbook(){
-    // try server guestbook first
+    var serverEntries = [];
     try{
       var res = await fetch('/guestbook.json?_=' + Date.now());
-      if (res.ok){ var arr = await res.json(); if (Array.isArray(arr)) return arr.map(function(e){ e._server = true; return e; }); }
-    } catch(e){}
-    try{ var stored = JSON.parse(localStorage.getItem('revamp4_guestbook') || '[]'); return Array.isArray(stored) ? stored.map(function(e){ e._server = false; return e; }) : []; }catch(e){ return []; }
+      if (res.ok){ serverEntries = await res.json(); if (!Array.isArray(serverEntries)) serverEntries = []; }
+    }catch(e){}
+    serverEntries = serverEntries.map(function(e){ e._server = true; return e; });
+    var queued = loadQueue().map(function(e){ e._queued = true; e._server = false; return e; });
+    var local = loadLocalGuestbook().map(function(e){ e._server = false; return e; });
+    // dedupe by id, prefer server, then queued, then local
+    var map = new Map();
+    serverEntries.forEach(function(e){ if (e && e.id) map.set(String(e.id), e); });
+    queued.forEach(function(e){ if (e && e.id && !map.has(String(e.id))) map.set(String(e.id), e); });
+    local.forEach(function(e){ if (e && e.id && !map.has(String(e.id))) map.set(String(e.id), e); });
+    // include any local/queued items that lack id (fallback to timestamp as id)
+    [queued, local].forEach(function(arr){ arr.forEach(function(e){ if (!e.id){ e.id = String(e.t || Date.now()); if (!map.has(e.id)) map.set(e.id, e); } }); });
+    return Array.from(map.values());
   }
-  function saveGuestbook(arr){ try{ localStorage.setItem('revamp4_guestbook', JSON.stringify(arr)); }catch(e){} }
+
   async function renderGuestbook(){
     var container = document.getElementById('guestbookEntries');
     if (!container) return;
     var entries = await loadGuestbook();
     if (!entries.length) { container.innerHTML = '<div class="small-note">No guestbook entries yet. Be the first!</div>'; return; }
     container.innerHTML = '';
-    // show newest first
-    entries.slice().reverse().forEach(function(en, idx){
+    entries.slice().reverse().forEach(function(en){
       var d = document.createElement('div'); d.className = 'entry';
       var who = document.createElement('span'); who.className = 'who'; who.textContent = en.name || 'Guest';
       var when = document.createElement('span'); when.className = 'when'; when.textContent = ' ' + (new Date(en.t || Date.now())).toLocaleString();
       var msg = document.createElement('div'); msg.className = 'msg'; msg.textContent = en.msg || '';
-      // controls and sync badge
       var controls = document.createElement('div'); controls.className = 'controls';
-      var del = document.createElement('button'); del.textContent = 'Delete'; del.title = 'Remove this entry';
-      del.addEventListener('click', function(){ if (confirm('Delete this entry?')) deleteGuestbookEntry(en.t); });
+      var del = document.createElement('button'); del.type = 'button'; del.textContent = 'Delete'; del.title = 'Remove this entry';
+      del.addEventListener('click', function(){ if (confirm('Delete this entry?')) deleteGuestbookEntry(en.id); });
       controls.appendChild(del);
-      var badge = document.createElement('span'); badge.className = 'sync-badge ' + (en._server ? 'server' : 'local'); badge.textContent = en._server ? 'server' : 'local';
+      var badge = document.createElement('span');
+      if (en._server) { badge.className = 'sync-badge server'; badge.textContent = 'server'; }
+      else if (en._queued) { badge.className = 'sync-badge local'; badge.textContent = 'queued'; }
+      else { badge.className = 'sync-badge local'; badge.textContent = 'local'; }
       d.appendChild(who); d.appendChild(when); d.appendChild(badge); d.appendChild(document.createElement('br')); d.appendChild(msg); d.appendChild(controls);
       container.appendChild(d);
     });
@@ -237,39 +260,74 @@
       if (name === null) return;
       var msg = prompt('Leave a short message:','Nice site!');
       if (msg === null) return;
-      // try POSTing to server endpoint; fall back to localStorage
+      // use queue-aware addGuestbookEntry
       (async function(){
-        try{
-          var p = await fetch('/guestbook', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ name: name, msg: msg }) });
-          if (p.ok){ await renderGuestbook(); alert('Thanks — your message was published to the server guestbook.'); return; }
-        }catch(e){}
-        var arr = JSON.parse(localStorage.getItem('revamp4_guestbook') || '[]'); arr.push({ name: name, msg: msg, t: Date.now(), _server: false }); saveGuestbook(arr); renderGuestbook();
-        alert('Saved locally (server publish failed).');
+        try{ await addGuestbookEntry(name, msg); alert('Thanks — your message was queued/published.'); }catch(e){ alert('Failed to add guestbook entry: '+String(e)); }
       })();
     }, false);
   }
 
   // delete an entry (by timestamp). Attempts to sync to server by uploading the new guestbook array.
-  async function deleteGuestbookEntry(t){
+  // delete an entry by id: try DELETE endpoint, otherwise fall back to upload or local removal
+  async function deleteGuestbookEntry(id){
     try{
-      var arr = await loadGuestbook();
-      var filtered = (arr||[]).filter(function(e){ return e.t !== t; });
-      // try to upload to server overwrite endpoint
+      // attempt DELETE /guestbook/:id
       try{
-        var up = await fetch('/guestbook/upload', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(filtered) });
-        if (up.ok){
-          // success - re-render from server
-          await renderGuestbook();
-          alert('Deleted on server.');
-          return;
-        }
+        var d = await fetch('/guestbook/' + encodeURIComponent(id), { method: 'DELETE' });
+        if (d.ok){ await renderGuestbook(); alert('Deleted on server.'); return; }
       }catch(e){}
-      // fallback: save locally and re-render
-      saveGuestbook(filtered);
+      // fallback: remove from local storage and queue, then attempt to upload merged array
+      var serverArr = [];
+      try{ var r = await fetch('/guestbook.json?_=' + Date.now()); if (r.ok) serverArr = await r.json(); }catch(e){}
+      var localArr = loadLocalGuestbook();
+      var newLocal = (localArr||[]).filter(function(e){ return String(e.id) !== String(id); });
+      saveGuestbook(newLocal);
+      var q = loadQueue().filter(function(e){ return String(e.id) !== String(id); }); saveQueue(q);
+      // merge server (without the deleted id) + local
+      var merged = (serverArr||[]).filter(function(e){ return String(e.id) !== String(id); }).concat(newLocal);
+      try{
+        var up = await fetch('/guestbook/upload', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(merged) });
+        if (up.ok){ await renderGuestbook(); alert('Deleted (server updated).'); return; }
+      }catch(e){}
       await renderGuestbook();
-      alert('Deleted locally. (Server sync failed)');
+      alert('Deleted locally (server sync failed)');
     }catch(e){ console.error(e); alert('Failed to delete entry: '+String(e)); }
   }
+
+  // --- guestbook queue + flush logic ---
+  async function sendEntryToServer(entry){
+    try{
+      var res = await fetch('/guestbook', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(entry) });
+      return res.ok;
+    }catch(e){ return false; }
+  }
+
+  async function addGuestbookEntry(name, msg){
+    var entry = { id: makeId(), name: name || 'Guest', msg: msg || '', t: Date.now() };
+    // store locally for UI
+    try{ var local = loadLocalGuestbook(); local.push(entry); saveGuestbook(local); }catch(e){}
+    await renderGuestbook();
+    // try to send immediately
+    var ok = await sendEntryToServer(entry);
+    if (ok){ await renderGuestbook(); return; }
+    // queue for retry
+    var q = loadQueue(); q.push(entry); saveQueue(q);
+    await renderGuestbook();
+  }
+
+  var flushBackoff = 1000; var flushTimer = null;
+  async function flushQueueOnce(){
+    var q = loadQueue(); if (!q || !q.length){ flushBackoff = 1000; return true; }
+    var entry = q[0];
+    var ok = await sendEntryToServer(entry);
+    if (ok){ q.shift(); saveQueue(q); flushBackoff = 1000; await renderGuestbook(); return true; }
+    flushBackoff = Math.min(flushBackoff * 1.8, 60000);
+    return false;
+  }
+  async function startQueueFlushLoop(){ if (flushTimer) clearTimeout(flushTimer); var ok = await flushQueueOnce(); flushTimer = setTimeout(startQueueFlushLoop, ok ? 2000 : flushBackoff); }
+  window.addEventListener('online', function(){ startQueueFlushLoop(); });
+  // kick off background flush
+  startQueueFlushLoop();
 
   function startPolling(){ if(polling) clearInterval(polling); polling = setInterval(function(){ if(autoRefresh.checked) fetchTree(); }, 2500); }
 

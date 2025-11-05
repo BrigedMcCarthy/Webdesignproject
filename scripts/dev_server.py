@@ -52,7 +52,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 if GUESTBOOK.exists():
                     try: arr = json.loads(GUESTBOOK.read_text(encoding='utf-8'))
                     except Exception: arr = []
-                arr.append({ 'name': data.get('name','Guest'), 'msg': data.get('msg',''), 't': int(__import__('time').time()*1000) })
+                # preserve client-provided id if present; otherwise generate one from timestamp
+                now_ms = int(__import__('time').time()*1000)
+                entry_id = str(data.get('id') or now_ms)
+                entry_t = int(data.get('t') or now_ms)
+                arr.append({ 'id': entry_id, 'name': data.get('name','Guest'), 'msg': data.get('msg',''), 't': entry_t })
                 GUESTBOOK.write_text(json.dumps(arr, indent=2), encoding='utf-8')
                 self.send_response(200); self.end_headers(); self.wfile.write(b'ok')
                 return
@@ -92,6 +96,23 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_response(500); self.end_headers(); self.wfile.write(str(e).encode('utf-8'))
             return
         # fallback to 404
+        self.send_response(404); self.end_headers(); self.wfile.write(b'not-found')
+
+    def do_DELETE(self):
+        p = urlparse(self.path).path
+        try:
+            if p.startswith('/guestbook/'):
+                id_to_remove = p.split('/')[-1]
+                arr = []
+                if GUESTBOOK.exists():
+                    try: arr = json.loads(GUESTBOOK.read_text(encoding='utf-8'))
+                    except Exception: arr = []
+                new = [e for e in arr if str(e.get('id','')) != id_to_remove]
+                GUESTBOOK.write_text(json.dumps(new, indent=2), encoding='utf-8')
+                self.send_response(200); self.end_headers(); self.wfile.write(b'ok'); return
+        except Exception as e:
+            self.send_response(500); self.end_headers(); self.wfile.write(str(e).encode('utf-8'))
+            return
         self.send_response(404); self.end_headers(); self.wfile.write(b'not-found')
 
 def run(port=8000):
