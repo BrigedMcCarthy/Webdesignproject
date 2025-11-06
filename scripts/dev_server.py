@@ -19,12 +19,18 @@ import http.server
 import socketserver
 import json
 import sys
+import os
+import base64
+import urllib.request
+import urllib.error
 from urllib.parse import urlparse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FILETREE = ROOT / 'filetree.json'
 GUESTBOOK = ROOT / 'guestbook.json'
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+GITHUB_REPO = os.environ.get('GITHUB_REPO')
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def translate_path(self, path):
@@ -58,6 +64,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 entry_t = int(data.get('t') or now_ms)
                 arr.append({ 'id': entry_id, 'name': data.get('name','Guest'), 'msg': data.get('msg',''), 't': entry_t })
                 GUESTBOOK.write_text(json.dumps(arr, indent=2), encoding='utf-8')
+                # Optionally push guestbook to GitHub when configured via env vars
+                try:
+                    if GITHUB_TOKEN and GITHUB_REPO:
+                        # attempt to push guestbook.json to the configured repo
+                        self.github_put_file('guestbook.json', json.dumps(arr, indent=2), 'chore: update guestbook from dev_server')
+                except Exception:
+                    pass
                 self.send_response(200); self.end_headers(); self.wfile.write(b'ok')
                 return
             if p == '/reset-build':
@@ -80,6 +93,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                     if not isinstance(parsed, list):
                         self.send_response(400); self.end_headers(); self.wfile.write(b'expected array'); return
                     GUESTBOOK.write_text(json.dumps(parsed, indent=2), encoding='utf-8')
+                    try:
+                        if GITHUB_TOKEN and GITHUB_REPO:
+                            self.github_put_file('guestbook.json', json.dumps(parsed, indent=2), 'chore: overwrite guestbook (upload)')
+                    except Exception:
+                        pass
                     self.send_response(200); self.end_headers(); self.wfile.write(b'ok'); return
                 except Exception as e:
                     self.send_response(400); self.end_headers(); self.wfile.write(str(e).encode('utf-8')); return
@@ -114,6 +132,49 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_response(500); self.end_headers(); self.wfile.write(str(e).encode('utf-8'))
             return
         self.send_response(404); self.end_headers(); self.wfile.write(b'not-found')
+
+    # helper: put a file to the configured GitHub repo using the REST API
+    def github_put_file(self, path, content_text, message):
+        """Create or update a file at `path` in repo GITHUB_REPO using GITHUB_TOKEN.
+        Returns True on success, raises on error."""
+        if not GITHUB_TOKEN or not GITHUB_REPO:
+            raise RuntimeError('GITHUB_TOKEN or GITHUB_REPO not configured')
+        api_base = 'https://api.github.com'
+        owner_repo = GITHUB_REPO.strip()
+        headers = {
+            'Authorization': f'token {GITHUB_TOKEN}',
+            'User-Agent': 'dev-server',
+            'Accept': 'application/vnd.github.v3+json'
+        }
+        # check if file exists to obtain SHA
+        url_get = f'{api_base}/repos/{owner_repo}/contents/{path}'
+        sha = None
+        try:
+            req = urllib.request.Request(url_get, headers=headers, method='GET')
+            with urllib.request.urlopen(req) as r:
+                body = r.read()
+                data = json.loads(body.decode('utf-8'))
+                sha = data.get('sha')
+        except urllib.error.HTTPError as he:
+            if he.code != 404:
+                # rethrow other errors
+                raise
+            sha = None
+        # prepare PUT
+        put_url = f'{api_base}/repos/{owner_repo}/contents/{path}'
+        b64 = base64.b64encode(content_text.encode('utf-8')).decode('ascii')
+        payload = { 'message': message or 'Update via dev_server', 'content': b64 }
+        if sha:
+            payload['sha'] = sha
+        data = json.dumps(payload).encode('utf-8')
+        req = urllib.request.Request(put_url, data=data, headers=headers, method='PUT')
+        try:
+            with urllib.request.urlopen(req) as r:
+                resp = r.read()
+                return True
+        except urllib.error.HTTPError as he:
+            body = he.read()
+            raise RuntimeError(f'GitHub API error: {he.code} {body.decode("utf-8")}')
 
 def run(port=8000):
     Handler.directory = str(ROOT)

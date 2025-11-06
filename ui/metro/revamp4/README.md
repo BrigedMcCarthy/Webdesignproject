@@ -103,3 +103,16 @@ How to use it:
 If you'd like, I can also:
 - Modify the workflow to run on PR merges only, or to update a `gh-pages` branch instead of `main`.
 - Add a workflow that regenerates `filetree.json` when a release is published, or when files in certain folders change.
+
+GitHub sync for guestbook (server-side token)
+
+I added optional GitHub sync hooks to the local dev server (`scripts/dev_server.py`). These are disabled unless you configure the following environment variables when you run the dev server:
+
+- `GITHUB_TOKEN` — a personal access token with `repo` scope that the dev server can use to update repository files. DO NOT paste this token into the browser or commit it to the repo. Keep it secret.
+- `GITHUB_REPO` — the repository identifier in the form `owner/repo` (for example `BrigedMcCarthy/Webdesignproject`).
+
+When both variables are present, the dev server will attempt to update `guestbook.json` in the repository via the GitHub REST API whenever entries are appended or the upload endpoint is used. This allows the guestbook to be backed by the repository (useful for small, low-traffic sites). Example usage (local only):
+
+	GITHUB_TOKEN=ghp_... GITHUB_REPO=BrigedMcCarthy/Webdesignproject python3 scripts/dev_server.py 8000
+
+Security note: Treat `GITHUB_TOKEN` as a secret. A compromised token can be used to alter your repository. For production systems, prefer serverless functions or an authenticated backend instead of running a dev server with a token on a public host.

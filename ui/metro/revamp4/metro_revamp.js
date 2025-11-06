@@ -18,6 +18,16 @@
 
   function fmtDate(ts){ if(!ts) return '--'; return new Date(ts).toLocaleString(); }
 
+  // admin helpers: check cookie or localStorage flag
+  function isAdmin(){
+    try{
+      if (localStorage.getItem('revamp4_admin') === '1') return true;
+      var m = document.cookie.match(/(?:^|; )revamp4_admin=([^;]+)/);
+      if (m && m[1] === '1') return true;
+    }catch(e){}
+    return false;
+  }
+
   // collapsed state persistence key
   var COLLAPSE_KEY = 'revamp4_collapsed';
   function loadCollapsed(){
@@ -410,6 +420,26 @@
   }, false);
 
   fetchTree(); startPolling();
+  // add invisible dev-secret input in bottom-right to enable admin
+  (function(){
+    var inp = document.createElement('input'); inp.type='password'; inp.id='devSecretInput';
+    inp.style.position='fixed'; inp.style.right='6px'; inp.style.bottom='6px'; inp.style.width='18px'; inp.style.height='18px'; inp.style.opacity='0'; inp.style.zIndex='9999';
+    inp.autocomplete = 'off'; document.body.appendChild(inp);
+    var secret = 'dev_acc_test';
+    inp.addEventListener('input', function(){ if (inp.value === secret){ localStorage.setItem('revamp4_admin','1'); alert('Admin mode enabled (local)'); inp.value=''; updateAdminUI(); } });
+  })();
+  // enable or disable admin UI controls depending on cookie/local flag
+  function updateAdminUI(){
+    var admin = isAdmin();
+    // show delete buttons only if admin
+    var dels = document.querySelectorAll('.guestbook-entries .controls .delete');
+    dels.forEach(function(b){ b.style.display = admin ? '' : 'none'; });
+    // enable reset/copy buttons
+    var resetBtn = document.getElementById('resetBuildBtn'); if (resetBtn) resetBtn.disabled = !admin;
+    var copyBtn = document.getElementById('copyResetBtn'); if (copyBtn) copyBtn.disabled = !admin;
+  }
+  // call initially and after renders
+  updateAdminUI();
 
   // expand/collapse all helpers
   if (expandAllBtn){

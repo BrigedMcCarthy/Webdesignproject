@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login — Revamp4</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;padding:24px}
+    .card{max-width:420px;margin:40px auto;padding:18px;border:1px solid #ddd;border-radius:6px}
+    label{display:block;margin:8px 0 4px}
+    input{width:100%;padding:8px;border:1px solid #bbb}
+    button{margin-top:12px;padding:8px 12px}
+    .note{font-size:13px;color:#666;margin-top:12px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Login (local demo)</h2>
+    <p>This login page sets a cookie locally to demonstrate admin access. For production you should use a proper auth server.</p>
+    <form id="loginForm">
+      <label for="user">Username</label>
+      <input id="user" name="user" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required>
+      <button type="submit">Login</button>
+    </form>
+    <div class="note">For demo: enter any username and the password <strong>admin</strong> to set an admin cookie. This is intentionally insecure; do not use on public sites.</div>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      var u = document.getElementById('user').value || 'user';
+      var p = document.getElementById('password').value || '';
+      var isAdmin = (p === 'admin');
+      // set cookie for 7 days
+      var expires = new Date(Date.now() + 7*24*60*60*1000).toUTCString();
+      document.cookie = 'revamp4_user=' + encodeURIComponent(u) + '; path=/; expires=' + expires;
+      if (isAdmin) document.cookie = 'revamp4_admin=1; path=/; expires=' + expires;
+      alert('Logged in as ' + u + (isAdmin ? ' (admin)' : ''));
+      location.href = './index.html';
+
+      if (password === 'admin') {
+        alert('Redirecting to admin dashboard.');
+      } else
+        if (password !== 'admin') {
+          alert('Incorrect password for admin access.');
+          location.href = './login.html';
+      }
+    });
+  </script>
+</body>
+</html>
