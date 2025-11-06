@@ -48,6 +48,12 @@ body{background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0
 .guestbook-entries .entry .sync-badge.server{background:#e6ffed;border:1px solid #b6f1c9;color:#1a6b2e}
 .guestbook-entries .entry .sync-badge.local{background:#fff6e6;border:1px solid #ffd9a6;color:#7a4a00}
 
+/* guestbook status */
+#guestbookStatus{margin-top:8px;font-size:13px;color:#333}
+.guestbook-entries .controls button.retry{background:#ffd; border:1px solid #cc9; padding:4px 6px}
+.guestbook-entries .controls button.delete{background:#ffdede;border:1px solid #f1a; padding:4px 6px}
+.guestbook-entries .syncing{display:inline-block;margin-left:8px;color:#0066cc;font-weight:700}
+
 
 .content{display:flex;gap:16px;padding:12px}
 .file-browser{flex:1;background:var(--panel);padding:12px;border:2px ridge #ddd}

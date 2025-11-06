@@ -85,3 +85,21 @@ You can create the commit locally with:
 	git commit -m "feat(revamp4): add retro file-tree viewer, search, preview, theme toggle and dev server; improve guestbook sync and accessibility"
 
 Thanks — the viewer is now a nicer, more accessible local dev tool. If you want, I can prepare a PR or squash these changes into a single commit for you.
+
+Automatically updating filetree.json on GitHub Pages
+
+Because GitHub Pages only serves static files, you can't run the Python generator on the Pages host itself. The usual solution is to run the generator in CI and commit the generated `filetree.json` into the repository so Pages can serve it.
+
+I've added a GitHub Actions workflow at `.github/workflows/generate-filetree.yml` that:
+
+- Runs on pushes to `main`, on a schedule (every 6 hours), and on manual dispatch.
+- Runs `python3 scripts/generate_filetree.py` inside the action, and if `filetree.json` changed it commits and pushes the updated file back to the repo.
+
+How to use it:
+
+1. Push your branch to GitHub (the action runs on `main` pushes — you can trigger manually via the Actions tab or modify the `on:` trigger to include your branch).
+2. The workflow will regenerate `filetree.json` and push it if different. GitHub Pages will then serve the updated file automatically.
+
+If you'd like, I can also:
+- Modify the workflow to run on PR merges only, or to update a `gh-pages` branch instead of `main`.
+- Add a workflow that regenerates `filetree.json` when a release is published, or when files in certain folders change.

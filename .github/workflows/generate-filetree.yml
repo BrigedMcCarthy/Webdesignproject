@@ -1,0 +1,42 @@
+name: Generate filetree.json
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    # every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Run filetree generator
+        run: |
+          python3 scripts/generate_filetree.py
+
+      - name: Commit filetree.json if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add filetree.json
+          if git diff --cached --quiet; then
+            echo "filetree.json unchanged — nothing to commit"
+          else
+            git commit -m "chore: regenerate filetree.json by GitHub Actions"
+            git push
+          fi

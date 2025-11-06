@@ -1,4 +1,4 @@
-// revamp4 new: Retro file-tree viewer JS
+// revamp4 new: file-tree viewer JS
 (function(){
   // elements
   var fileTreeEl = document.getElementById('fileTree');
@@ -199,6 +199,7 @@
   // guestbook sync: queue + server-aware rendering
   var GUESTBOOK_STORAGE = 'revamp4_guestbook';
   var GUESTBOOK_QUEUE_KEY = 'revamp4_guestbook_queue';
+  var GUESTBOOK_LASTSYNC = 'revamp4_guestbook_lastsync';
 
   function saveGuestbook(arr){ try{ localStorage.setItem(GUESTBOOK_STORAGE, JSON.stringify(arr)); }catch(e){} }
   function loadLocalGuestbook(){ try{ var s = JSON.parse(localStorage.getItem(GUESTBOOK_STORAGE) || '[]'); return Array.isArray(s) ? s : []; }catch(e){ return []; } }
@@ -239,9 +240,15 @@
       var when = document.createElement('span'); when.className = 'when'; when.textContent = ' ' + (new Date(en.t || Date.now())).toLocaleString();
       var msg = document.createElement('div'); msg.className = 'msg'; msg.textContent = en.msg || '';
       var controls = document.createElement('div'); controls.className = 'controls';
-      var del = document.createElement('button'); del.type = 'button'; del.textContent = 'Delete'; del.title = 'Remove this entry';
+      var del = document.createElement('button'); del.type = 'button'; del.textContent = 'Delete'; del.title = 'Remove this entry'; del.className='delete';
       del.addEventListener('click', function(){ if (confirm('Delete this entry?')) deleteGuestbookEntry(en.id); });
       controls.appendChild(del);
+      // retry button for queued entries
+      if (en._queued){
+        var retry = document.createElement('button'); retry.type = 'button'; retry.textContent = 'Retry'; retry.className='retry';
+        retry.addEventListener('click', function(){ retryGuestbookEntry(en.id); });
+        controls.appendChild(retry);
+      }
       var badge = document.createElement('span');
       if (en._server) { badge.className = 'sync-badge server'; badge.textContent = 'server'; }
       else if (en._queued) { badge.className = 'sync-badge local'; badge.textContent = 'queued'; }
@@ -249,6 +256,7 @@
       d.appendChild(who); d.appendChild(when); d.appendChild(badge); d.appendChild(document.createElement('br')); d.appendChild(msg); d.appendChild(controls);
       container.appendChild(d);
     });
+    updateGuestbookStatus();
   }
   renderGuestbook();
 
@@ -262,7 +270,7 @@
       if (msg === null) return;
       // use queue-aware addGuestbookEntry
       (async function(){
-        try{ await addGuestbookEntry(name, msg); alert('Thanks — your message was queued/published.'); }catch(e){ alert('Failed to add guestbook entry: '+String(e)); }
+        try{ var sent = await addGuestbookEntry(name, msg); if (sent) alert('Thanks — your message was saved to the site.'); else alert('Saved locally (queued) — it will be sent when online.'); }catch(e){ alert('Failed to add guestbook entry: '+String(e)); }
       })();
     }, false);
   }
@@ -298,6 +306,9 @@
   async function sendEntryToServer(entry){
     try{
       var res = await fetch('/guestbook', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(entry) });
+      if (res.ok){
+        try{ localStorage.setItem(GUESTBOOK_LASTSYNC, String(Date.now())); }catch(e){}
+      }
       return res.ok;
     }catch(e){ return false; }
   }
@@ -313,6 +324,8 @@
     // queue for retry
     var q = loadQueue(); q.push(entry); saveQueue(q);
     await renderGuestbook();
+    updateGuestbookStatus();
+    return ok;
   }
 
   var flushBackoff = 1000; var flushTimer = null;
@@ -328,6 +341,27 @@
   window.addEventListener('online', function(){ startQueueFlushLoop(); });
   // kick off background flush
   startQueueFlushLoop();
+  // guestbook status UI
+  function getLastSync(){ try{ var v = localStorage.getItem(GUESTBOOK_LASTSYNC); return v ? parseInt(v,10) : null; }catch(e){ return null; } }
+  function updateGuestbookStatus(){
+    var el = document.getElementById('guestbookStatus'); if (!el) return;
+    var q = loadQueue(); var qlen = q.length;
+    var last = getLastSync();
+    var txt = '';
+    if (qlen) txt += 'Queued: ' + qlen + ' — ';
+    if (last) txt += 'Last sync: ' + new Date(last).toLocaleString(); else txt += 'Never synced';
+    el.textContent = txt;
+  }
+  // retry single queued entry by id
+  async function retryGuestbookEntry(id){
+    var q = loadQueue(); var idx = q.findIndex(function(e){ return String(e.id) === String(id); });
+    if (idx === -1) return alert('Entry not found in queue');
+    var entry = q[idx];
+    var ok = await sendEntryToServer(entry);
+    if (ok){ q.splice(idx,1); saveQueue(q); await renderGuestbook(); updateGuestbookStatus(); alert('Synced to server'); return; }
+    alert('Retry failed — will remain queued');
+  }
+  updateGuestbookStatus();
 
   function startPolling(){ if(polling) clearInterval(polling); polling = setInterval(function(){ if(autoRefresh.checked) fetchTree(); }, 2500); }
 
