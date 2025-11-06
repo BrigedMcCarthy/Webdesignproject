@@ -38,5 +38,10 @@ jobs:
             echo "filetree.json unchanged — nothing to commit"
           else
             git commit -m "chore: regenerate filetree.json by GitHub Actions"
+            - name: Pull latest changes
+  run: git pull origin main --rebase
+
+- name: Push changes
+  run: git push origin main
             git push
           fi
