@@ -1,4 +1,4 @@
-name: Run generate_filetree.py
+name: Run dev_server.py
 
 on:
   push:
@@ -27,6 +27,6 @@ jobs:
           # Install only if requirements.txt exists to avoid failing the job
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run generate_filetree.py
+      - name: Run dev_server.py
         run: |
-          python scripts/generate_filetree.py
+          python scripts/dev_server.py
