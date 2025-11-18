@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>The Window Object</h1>
+<h2>The moveTo() Method</h2>
+<button id="b1" onclick="openWin()">Open a new window</button>
+
+<script>
+
+// Source - https://stackoverflow.com/a
+// Posted by 1'', modified by community. See post 'Timeline' for change history
+// Retrieved 2025-11-18, License - CC BY-SA 3.0
+
+x = 0;
+y = 0;
+
+document.onkeydown = function(e) {
+    switch (e.keyCode) {
+        case 37:
+            x -= 5;
+            myWindow.moveTo(x, y);
+            break;
+        case 38:
+            y -= 5;
+            myWindow.moveTo(x, y);
+            break;
+        case 39:
+            x += 5;
+            myWindow.moveTo(x, y);
+            break;
+        case 40:
+            y += 5;
+            myWindow.moveTo(x, y);
+            break;
+    }
+};
+
+
+
+    document.getElementById('b1').addEventListener('onkeydown', function(event) {
+  // Check if Enter was pressed
+  if (event.keyCode = 37) {
+    // Prevent the default action
+    event.preventDefault();
+    
+    // Trigger the button click
+    document.getElementById('b1').click();
+  }
+});
+
+let myWindow;
+
+function openWin() {
+  myWindow=window.open("", "", "width=200, height=200");
+}
+
+function moveWin() {
+  myWindow.moveTo(0, 0);
+}
+function moveWin2() {
+  myWindow.moveTo(100, 0);
+}
+function moveWin3() {
+  myWindow.moveTo(200, 0);
+}
+</script>
+
+</body>
+</html>
