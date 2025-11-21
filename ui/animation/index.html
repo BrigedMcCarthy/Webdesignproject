@@ -1,70 +1,326 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Window System v2.1 (Collision Fix)</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 20px; 
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        h1 { margin-top: 0; color: #1a1a1a; }
+        
+        .dashboard {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .control-group:last-child { border-bottom: none; }
+        
+        label { font-weight: bold; display: block; margin-bottom: 5px; }
+        
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+            margin-right: 10px;
+        }
+        .btn-primary:hover { background-color: #4338ca; }
+        
+        select, input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .radio-group { display: flex; gap: 15px; }
+        .radio-group label { font-weight: normal; cursor: pointer; }
+
+        .status {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
 <body>
 
-<h1>The Window Object</h1>
-<h2>The moveTo() Method</h2>
-<button id="b1" onclick="openWin()">Open a new window</button>
+<h1>Multi-Window System v2.1 (Collision Fix)</h1>
+
+<div class="dashboard">
+    <div class="control-group">
+        <label>1. Launch Windows</label>
+        <button id="btnOpen1" class="btn-primary">Open Window 1 (Left)</button>
+        <button id="btnOpen2" class="btn-primary">Open Window 2 (Right)</button>
+        <div class="status">Note: Click inside a window to bring it to the front (focus).</div>
+    </div>
+
+    <div class="control-group">
+        <label>2. Control Mode</label>
+        <div class="radio-group">
+            <label><input type="radio" name="controlMode" value="sync" checked> <strong>Sync:</strong> Arrow Keys move BOTH</label>
+            <label><input type="radio" name="controlMode" value="split"> <strong>Split:</strong> WASD (Win 1) + Arrows (Win 2)</label>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label>3. Color Algorithm</label>
+        <select id="colorMode">
+            <option value="linear">Linear (Top-Left to Bottom-Right)</option>
+            <option value="radial">Radial (Center Out)</option>
+            <option value="plasma">Plasma (Animated Time-Based)</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>4. Movement Speed</label>
+        <input type="range" id="speedRange" min="1" max="20" value="5">
+    </div>
+</div>
 
 <script>
-
-// Source - https://stackoverflow.com/a
-// Posted by 1'', modified by community. See post 'Timeline' for change history
-// Retrieved 2025-11-18, License - CC BY-SA 3.0
-
-x = 0;
-y = 0;
-
-document.onkeydown = function(e) {
-    switch (e.keyCode) {
-        case 37:
-            x -= 5;
-            myWindow.moveTo(x, y);
-            break;
-        case 38:
-            y -= 5;
-            myWindow.moveTo(x, y);
-            break;
-        case 39:
-            x += 5;
-            myWindow.moveTo(x, y);
-            break;
-        case 40:
-            y += 5;
-            myWindow.moveTo(x, y);
-            break;
-    }
-};
-
-
-
-    document.getElementById('b1').addEventListener('onkeydown', function(event) {
-  // Check if Enter was pressed
-  if (event.keyCode = 37) {
-    // Prevent the default action
-    event.preventDefault();
+    // --- Configuration ---
+    const MOVABLE_SIZE = 50; 
+    const GRID_DIMENSION = 16; 
+    const MAX_SCREEN_X = window.screen.width;
+    const MAX_SCREEN_Y = window.screen.height;
     
-    // Trigger the button click
-    document.getElementById('b1').click();
-  }
-});
+    // --- State ---
+    let win1 = null;
+    let win2 = null;
+    let activeWindow = null;
+    let time = 0; 
 
-let myWindow;
+    // Inputs
+    const INPUTS = {
+        ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false,
+        KeyW: false, KeyS: false, KeyA: false, KeyD: false
+    };
 
-function openWin() {
-  myWindow=window.open("", "", "width=200, height=200");
-}
+    // Settings 
+    let SETTINGS = { speed: 5, mode: 'sync', algo: 'linear' };
 
-function moveWin() {
-  myWindow.moveTo(0, 0);
-}
-function moveWin2() {
-  myWindow.moveTo(100, 0);
-}
-function moveWin3() {
-  myWindow.moveTo(200, 0);
-}
+    // --- Palette ---
+    const PALETTE = [];
+    for (let i = 0; i < 256; i++) {
+        const hue = i * 360 / 256; 
+        PALETTE.push(`hsl(${hue}, 100%, 50%)`);
+    }
+
+    // --- Color Algorithms ---
+    function getLinearColorIndex(x, y) {
+        const normX = Math.min(Math.max(x / MAX_SCREEN_X, 0), 1);
+        const normY = Math.min(Math.max(y / MAX_SCREEN_Y, 0), 1);
+        const progress = (normX * 0.5 + normY * 0.5); 
+        return Math.floor(progress * 255);
+    }
+
+    function getRadialColorIndex(x, y) {
+        const centerX = MAX_SCREEN_X / 2;
+        const centerY = MAX_SCREEN_Y / 2;
+        const dx = x - centerX;
+        const dy = y - centerY;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const maxDist = Math.sqrt(centerX*centerX + centerY*centerY);
+        const progress = Math.min(dist / maxDist, 1);
+        return Math.floor(progress * 255);
+    }
+
+    function getPlasmaColorIndex(x, y, t) {
+        const u = x / 200;
+        const v = y / 200;
+        const value = Math.sin(u + t) + Math.sin(v + t) + Math.sin(u + v + t) + Math.sin(Math.sqrt(u*u + v*v) + t);
+        const progress = (value + 4) / 8;
+        return Math.floor(progress * 255);
+    }
+
+    function darkenColor(hslString) {
+        return hslString.replace(/(\d+)%\)/, '25%)');
+    }
+
+    // --- Window Management ---
+    function setupWindowContent(win, id) {
+        const doc = win.document;
+        let gridHTML = '';
+        for(let i=0; i<GRID_DIMENSION*GRID_DIMENSION; i++) {
+            gridHTML += `<div id="c_${i}" style="width:100%;height:100%"></div>`;
+        }
+
+        doc.write(`
+            <html><head><title>Win ${id}</title>
+            <style>
+                body { margin:0; height:100vh; display:grid; 
+                grid-template-columns:repeat(${GRID_DIMENSION},1fr); 
+                grid-template-rows:repeat(${GRID_DIMENSION},1fr); 
+                overflow:hidden; background: #000;}
+            </style>
+            </head><body>${gridHTML}</body></html>
+        `);
+        doc.close();
+
+        win.addEventListener('focus', () => activeWindow = win);
+        win.addEventListener('click', () => win.focus()); // Ensure click focuses
+        if(!activeWindow) activeWindow = win;
+    }
+
+    function updateWindowVisuals(win, x, y, isCollision) {
+        if(!win || win.closed || !win.document.body) return;
+
+        // If colliding, set background to white just once per frame per window
+        if (isCollision) {
+            win.document.body.style.backgroundColor = "white";
+            // Hide grid squares so white background shows through
+             const squares = win.document.getElementsByTagName('div');
+             for(let i=0; i<squares.length; i++) squares[i].style.opacity = 0;
+            return;
+        } else {
+             win.document.body.style.backgroundColor = "black";
+             // Show grid squares
+             const squares = win.document.getElementsByTagName('div');
+             for(let i=0; i<squares.length; i++) squares[i].style.opacity = 1;
+        }
+
+        const squareSize = MOVABLE_SIZE / GRID_DIMENSION;
+        const isBehind = (win !== activeWindow);
+
+        for (let r = 0; r < GRID_DIMENSION; r++) {
+            for (let c = 0; c < GRID_DIMENSION; c++) {
+                const index = r * GRID_DIMENSION + c;
+                const sampleX = x + (c * squareSize);
+                const sampleY = y + (r * squareSize);
+                let colorIdx = 0;
+                
+                if (SETTINGS.algo === 'linear') colorIdx = getLinearColorIndex(sampleX, sampleY);
+                else if (SETTINGS.algo === 'radial') colorIdx = getRadialColorIndex(sampleX, sampleY);
+                else if (SETTINGS.algo === 'plasma') colorIdx = getPlasmaColorIndex(sampleX, sampleY, time);
+
+                colorIdx = Math.max(0, Math.min(255, colorIdx));
+                let finalColor = PALETTE[colorIdx];
+                if (isBehind) finalColor = darkenColor(finalColor);
+
+                const div = win.document.getElementById(`c_${index}`);
+                if (div) div.style.backgroundColor = finalColor;
+            }
+        }
+    }
+
+    // --- FIXED COLLISION DETECTION ---
+    function checkCollision(x1, y1, x2, y2) {
+        // Define a "buffer" to account for window borders (chrome).
+        // The windows must overlap by at least this many pixels to count as a collision.
+        const BUFFER = 10; 
+        const HITBOX_SIZE = MOVABLE_SIZE - BUFFER; // Effective size is 40x40
+        const OFFSET = BUFFER / 2; // Offset coordinates inwards by 5px
+
+        const hx1 = x1 + OFFSET;
+        const hy1 = y1 + OFFSET;
+        const hx2 = x2 + OFFSET;
+        const hy2 = y2 + OFFSET;
+
+        // Standard AABB collision on the smaller, inner hitboxes
+        return (hx1 < hx2 + HITBOX_SIZE &&
+                hx1 + HITBOX_SIZE > hx2 &&
+                hy1 < hy2 + HITBOX_SIZE &&
+                hy1 + HITBOX_SIZE > hy2);
+    }
+
+    // --- Main Loop ---
+    function gameLoop() {
+        time += 0.05; 
+
+        let dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
+        const s = parseInt(SETTINGS.speed);
+
+        if (SETTINGS.mode === 'sync') {
+            if (INPUTS.ArrowUp)   { dy1 -= s; dy2 -= s; }
+            if (INPUTS.ArrowDown) { dy1 += s; dy2 += s; }
+            if (INPUTS.ArrowLeft) { dx1 -= s; dx2 -= s; }
+            if (INPUTS.ArrowRight){ dx1 += s; dx2 += s; }
+        } else {
+            if (INPUTS.KeyW) dy1 -= s;
+            if (INPUTS.KeyS) dy1 += s;
+            if (INPUTS.KeyA) dx1 -= s;
+            if (INPUTS.KeyD) dx1 += s;
+            if (INPUTS.ArrowUp)   dy2 -= s;
+            if (INPUTS.ArrowDown) dy2 += s;
+            if (INPUTS.ArrowLeft) dx2 -= s;
+            if (INPUTS.ArrowRight)dx2 += s;
+        }
+
+        let x1 = -2000, y1 = -2000;
+        let x2 = -2000, y2 = -2000;
+
+        if (win1 && !win1.closed) {
+            let cx = win1.screenX + dx1;
+            let cy = win1.screenY + dy1;
+            cx = Math.max(0, Math.min(cx, MAX_SCREEN_X - MOVABLE_SIZE));
+            cy = Math.max(0, Math.min(cy, MAX_SCREEN_Y - MOVABLE_SIZE));
+            if(dx1 !== 0 || dy1 !== 0) win1.moveTo(cx, cy);
+            x1 = cx; y1 = cy;
+        }
+
+        if (win2 && !win2.closed) {
+            let cx = win2.screenX + dx2;
+            let cy = win2.screenY + dy2;
+            cx = Math.max(0, Math.min(cx, MAX_SCREEN_X - MOVABLE_SIZE));
+            cy = Math.max(0, Math.min(cy, MAX_SCREEN_Y - MOVABLE_SIZE));
+            if(dx2 !== 0 || dy2 !== 0) win2.moveTo(cx, cy);
+            x2 = cx; y2 = cy;
+        }
+
+        const colliding = checkCollision(x1, y1, x2, y2);
+
+        updateWindowVisuals(win1, x1, y1, colliding);
+        updateWindowVisuals(win2, x2, y2, colliding);
+    }
+
+    // --- UI & Event Listeners ---
+    window.addEventListener('keydown', e => { if(e.code in INPUTS) { e.preventDefault(); INPUTS[e.code] = true; } });
+    window.addEventListener('keyup', e => { if(e.code in INPUTS) INPUTS[e.code] = false; });
+
+    document.querySelectorAll('input[name="controlMode"]').forEach(r => {
+        r.addEventListener('change', e => SETTINGS.mode = e.target.value);
+    });
+    document.getElementById('colorMode').addEventListener('change', e => SETTINGS.algo = e.target.value);
+    document.getElementById('speedRange').addEventListener('input', e => SETTINGS.speed = e.target.value);
+
+    document.getElementById('btnOpen1').addEventListener('click', () => {
+        if(win1 && !win1.closed) return win1.focus();
+        const left = (MAX_SCREEN_X/2) - 60;
+        const top = (MAX_SCREEN_Y/2);
+        win1 = window.open('about:blank', 'win1', `width=${MOVABLE_SIZE},height=${MOVABLE_SIZE},left=${left},top=${top},popup=yes`);
+        if(win1) setupWindowContent(win1, 1);
+    });
+
+    document.getElementById('btnOpen2').addEventListener('click', () => {
+        if(win2 && !win2.closed) return win2.focus();
+        const left = (MAX_SCREEN_X/2) + 60;
+        const top = (MAX_SCREEN_Y/2);
+        win2 = window.open('about:blank', 'win2', `width=${MOVABLE_SIZE},height=${MOVABLE_SIZE},left=${left},top=${top},popup=yes`);
+        if(win2) setupWindowContent(win2, 2);
+    });
+
+    setInterval(gameLoop, 16);
+
 </script>
-
 </body>
 </html>
